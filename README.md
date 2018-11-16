@@ -12,6 +12,8 @@ If you have questions about the structure or how it works take a look at the doc
 To compile the project from Xcode just open `iosApp/iosApp.xcodeproj` and run the application.
 The [swift tests](iosApp/iosAppTests/iosAppTests.swift) also can be executed from Xcode.
 
+Xcode has been configured according to [Multiplatform Project: iOS and Android documentation](https://kotlinlang.org/docs/tutorials/native/mpp-ios-android.html)
+
 To compile a framework for ios simulator from the command line execute:
 
 ```
