@@ -1,1 +1,1 @@
-include ':androidApp'
+include ':androidApp', ':MultiplatformLibrary'
