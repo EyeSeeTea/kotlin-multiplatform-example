@@ -8,4 +8,7 @@ expect object Platform {
     val name: String
 }
 
-fun multiplatformHello(): String = "Hello from ${Platform.name}"
+
+class Hello {
+    fun multiplatformHello(): String = "Hello from ${Platform.name}"
+}
