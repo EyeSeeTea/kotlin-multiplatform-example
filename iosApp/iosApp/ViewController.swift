@@ -17,7 +17,14 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        helloLabel.text = Hello().multiplatformHello()
+        let d2Api = D2Api.Builder()
+            .url(url: "some username")
+            .credentials(username: "some username", password: "some password")
+            .build();
+        
+        helloLabel.text = d2Api.getHtmlContent()
+        
+        //helloLabel.text = Hello().multiplatformHello()
     }
 
     

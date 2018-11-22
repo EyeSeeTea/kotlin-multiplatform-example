@@ -1,1 +1,3 @@
 include ':androidApp', ':multiplatformLibrary'
+
+enableFeaturePreview('GRADLE_METADATA')

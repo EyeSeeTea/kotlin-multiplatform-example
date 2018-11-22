@@ -1,12 +1,18 @@
 apply plugin: 'kotlin-multiplatform'
+apply plugin: 'kotlinx-serialization'
 
 repositories {
     mavenCentral()
 }
 
 kotlin {
+
+    def ktor_version = "1.0.0"
+    def serialization_version = "0.9.0"
+
     targets {
         fromPreset(presets.jvm, 'android')
+
         fromPreset(presets.js, 'js') {
             compilations.main {
                 configure([compileKotlinJs, compileTestKotlinJs]) {
@@ -18,18 +24,24 @@ kotlin {
                 }
             }
         }
-
-        final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") \
-                              ? presets.iosArm64 : presets.iosX64
+/*
+        final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos")   \
+                                ? presets.iosArm64 : presets.iosX64
 
         fromPreset(iOSTarget, 'iOS') {
             compilations.main.outputKinds('FRAMEWORK')
-        }
+        }*/
     }
     sourceSets {
         commonMain {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-stdlib-common'
+
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serialization_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutines_version"
+
+                implementation "io.ktor:ktor-client-core:$ktor_version"
+                implementation "io.ktor:ktor-client-json:$ktor_version"
             }
         }
         commonTest {
@@ -41,6 +53,13 @@ kotlin {
         androidMain {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"
+
+                implementation "io.ktor:ktor-client-core-jvm:$ktor_version"
+                implementation "io.ktor:ktor-client-json-jvm:$ktor_version"
+                implementation "io.ktor:ktor-client-okhttp:$ktor_version"
+                implementation "io.ktor:ktor-client-auth-basic:$ktor_version"
             }
         }
         androidTest {
@@ -52,6 +71,9 @@ kotlin {
         jsMain {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-stdlib-js'
+
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$coroutines_version"
+                implementation "io.ktor:ktor-client-js:$ktor_version"
             }
         }
         jsTest {
@@ -59,15 +81,22 @@ kotlin {
                 implementation 'org.jetbrains.kotlin:kotlin-test-js'
             }
         }
-        iOSMain {
+        /*iOSMain {
+            dependencies {
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutines_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serialization_version"
+                implementation "io.ktor:ktor-client-ios:$ktor_version"
+                implementation "io.ktor:ktor-client-core-ios:$ktor_version"
+                implementation "io.ktor:ktor-client-json-ios:$ktor_version"
+                }
+
         }
         iOSTest {
-        }
+        }*/
     }
 }
 
-
-task packForXCode(type: Sync) {
+/*task packForXCode(type: Sync) {
     final File frameworkDir = new File(buildDir, "xcode-frameworks")
     final String mode = project.findProperty("XCODE_CONFIGURATION")?.toUpperCase() ?: 'DEBUG'
 
@@ -85,7 +114,7 @@ task packForXCode(type: Sync) {
     }
 
     tasks.build.dependsOn packForXCode
-}
+}*/
 
 task packForJS(dependsOn: [jsJar]) {
     doLast {
