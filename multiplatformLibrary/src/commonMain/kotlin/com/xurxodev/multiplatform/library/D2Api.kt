@@ -1,7 +1,7 @@
 package com.xurxodev.multiplatform.library
 
 import com.xurxodev.multiplatform.library.common.LogFeature
-import com.xurxodev.multiplatform.library.common.models.D2CollectionResponse
+import com.xurxodev.multiplatform.library.common.models.D2CollectionResponseCustomSerializer
 import com.xurxodev.multiplatform.library.common.models.Pager
 import com.xurxodev.multiplatform.library.optionsets.Option
 import com.xurxodev.multiplatform.library.optionsets.OptionSet
@@ -28,7 +28,7 @@ class D2Api(url: String, val credentials: D2Credentials) {
         client = HttpClient() {
             install(JsonFeature) {
                 serializer = KotlinxSerializer(JSON.nonstrict).apply {
-                    register(D2CollectionResponse.serializer(OptionSet.serializer()))
+                    register(D2CollectionResponseCustomSerializer(OptionSet.serializer()))
                     register(OptionSet.serializer())
                     register(Option.serializer())
                     register(Pager.serializer())

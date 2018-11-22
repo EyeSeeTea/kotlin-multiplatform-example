@@ -24,7 +24,7 @@ class OptionSetEndpoint internal constructor(private val client: HttpClient)
                 "code,attributeValues[*,attribute[id,code]]]")
             } as D2CollectionResponse<OptionSet>
 
-            D2Response.Success(response!!.optionSets)
+            D2Response.Success(response!!.items)
         }
     }
 }
