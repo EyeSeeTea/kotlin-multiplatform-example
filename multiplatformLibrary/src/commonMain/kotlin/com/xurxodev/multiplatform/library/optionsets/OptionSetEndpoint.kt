@@ -19,9 +19,13 @@ class OptionSetEndpoint internal constructor(private val client: HttpClient)
         return executeCall {
             response = client.get{
                 url { encodedPath = "/api/optionSets" }
+                //parameter("paging",false)
+/*                parameter("fields","id,name,displayName,created,lastUpdated,access," +
+                    "version,options[id,name,displayName,created,lastUpdated,access," +
+                "code,attributeValues[*,attribute[id,code]]]")*/
                 parameter("fields","id,name,displayName,created,lastUpdated,access," +
                     "version,options[id,name,displayName,created,lastUpdated,access," +
-                "code,attributeValues[*,attribute[id,code]]]")
+                    "code]")
             } as D2CollectionResponse<OptionSet>
 
             D2Response.Success(response!!.items)
