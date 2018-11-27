@@ -20,6 +20,8 @@ kotlin {
                         languageVersion = "1.3"
                         sourceMap = true
                         metaInfo = true
+                        sourceMapEmbedSources = "always"
+                        //moduleKind= "AMD" "CommonJS" "UMD"
                     }
                 }
             }

@@ -1,5 +1,6 @@
 package com.xurxodev.multiplatform.library.common.models
 
+import com.xurxodev.multiplatform.library.optionsets.OptionSet
 import kotlinx.serialization.Decoder
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
@@ -9,10 +10,13 @@ import kotlinx.serialization.json.JSON
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonTreeMapper
 
+//Generic serialization in javascript is broken forJs
+//https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/custom_serializers.md#about-generic-serializers
+//https://github.com/Kotlin/kotlinx.serialization/issues/244
 @Serializable(with = D2CollectionResponseCustomSerializer::class)
-class D2CollectionResponse<T>(
+class D2CollectionResponse(
     val pager: Pager?,
-    var items: List<T>
+    var items: List<OptionSet>
 )
 
 /**
@@ -21,16 +25,16 @@ class D2CollectionResponse<T>(
  * for this reason with gson is necessary to create a specific deserializer
  */
 @Serializer(forClass = D2CollectionResponse::class)
-class D2CollectionResponseCustomSerializer<T : Any>(private val dataSerializer: KSerializer<T>)
-    : KSerializer<D2CollectionResponse<T>> {
+class D2CollectionResponseCustomSerializer(private val dataSerializer: KSerializer<OptionSet>)
+    : KSerializer<D2CollectionResponse> {
 
-    override fun deserialize(input: Decoder): D2CollectionResponse<T> {
+    override fun deserialize(input: Decoder): D2CollectionResponse {
         val jsonReader = input as? JSON.JsonInput
             ?: throw SerializationException("This class can be loaded only by JSON")
         val tree = jsonReader.readAsTree() as? JsonObject
             ?: throw SerializationException("Expected JSON object")
 
-        var items = mutableListOf<T>()
+        var items = mutableListOf<OptionSet>()
         lateinit var pager: Pager
 
         for (entry in tree.content) {

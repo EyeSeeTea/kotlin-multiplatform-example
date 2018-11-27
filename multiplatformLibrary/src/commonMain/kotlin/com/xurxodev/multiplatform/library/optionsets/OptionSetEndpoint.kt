@@ -7,14 +7,15 @@ import com.xurxodev.multiplatform.library.executeCall
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.response.HttpResponse
 import io.ktor.util.InternalAPI
 
 class OptionSetEndpoint internal constructor(private val client: HttpClient)
-    : D2Endpoint<D2CollectionResponse<OptionSet>>() {
+    : D2Endpoint<D2CollectionResponse>() {
 
     @InternalAPI
     fun getAll(): D2Response<List<OptionSet>> {
-        var response: D2CollectionResponse<OptionSet>?
+        var response: D2CollectionResponse?
 
         return executeCall {
             response = client.get{
@@ -26,7 +27,7 @@ class OptionSetEndpoint internal constructor(private val client: HttpClient)
                 parameter("fields","id,name,displayName,created,lastUpdated,access," +
                     "version,options[id,name,displayName,created,lastUpdated,access," +
                     "code]")
-            } as D2CollectionResponse<OptionSet>
+            }
 
             D2Response.Success(response!!.items)
         }
