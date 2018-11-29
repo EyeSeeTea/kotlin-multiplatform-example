@@ -11,6 +11,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        helloTextView.text = Hello().multiplatformHello()
+        val d2Api = D2Api.Builder()
+            .url("sample url")
+            .credentials("user","pwd")
+            .build();
+        val response = d2Api.optionSets().getAll()
+
+        when (response){
+            is D2Response.Success -> helloTextView.text = response.value.toString()
+            is D2Response.Error -> helloTextView.text = response.toString()
+        }
+
+        //helloTextView.text = Hello().multiplatformHello()
     }
 }

@@ -6,5 +6,5 @@
 /build
 /captures
 .externalNativeBuild
-/webApp/js
+/webApp/node_modules
 

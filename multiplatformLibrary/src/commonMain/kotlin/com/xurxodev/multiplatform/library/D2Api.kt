@@ -20,37 +20,40 @@ import kotlinx.serialization.json.JSON
 expect fun <T> executeCall(block: suspend () -> T): T
 
 @UseExperimental(InternalAPI::class)
-class D2Api(url: String, val credentials: D2Credentials) {
-    //private val apiUrl: String = "$url/api"
+class D2Api(val urlBase: String, val credentials: D2Credentials, externalClient: HttpClient? = null) {
     private val client: HttpClient
 
     init {
-        client = HttpClient() {
-            install(JsonFeature) {
-                serializer = KotlinxSerializer(JSON.nonstrict).apply {
-                    register(D2CollectionResponseCustomSerializer(OptionSet.serializer()))
-                    register(OptionSet.serializer())
-                    register(Option.serializer())
-                    register(Pager.serializer())
+        if (externalClient != null)
+            client = externalClient
+        else {
+            client = HttpClient() {
+                install(JsonFeature) {
+                    serializer = KotlinxSerializer(JSON.nonstrict).apply {
+                        register(D2CollectionResponseCustomSerializer(OptionSet.serializer()))
+                        register(OptionSet.serializer())
+                        register(Option.serializer())
+                        register(Pager.serializer())
+                    }
                 }
-            }
 
-            install(LogFeature)
+                install(LogFeature)
 
-            defaultRequest {
-                url {
-                    takeFrom(url)
+                defaultRequest {
+                    url {
+                        takeFrom(urlBase)
+                    }
+                    header(
+                        "Authorization", "Basic " +
+                            "${credentials.username}:${credentials.password}".encodeBase64()
+                    )
                 }
-                header(
-                    "Authorization", "Basic " +
-                        "${credentials.username}:${credentials.password}".encodeBase64()
-                )
             }
         }
     }
 
-    fun getHtmlContent():String{
-        return executeCall{
+    fun getHtmlContent(): String {
+        return executeCall {
             client.get("https://en.wikipedia.org/wiki/Main_Page") as String
         }
     }
